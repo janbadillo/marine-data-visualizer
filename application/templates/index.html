@@ -1,35 +1,64 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="site-header-logo">
-        <h1 class = "text-center">
-            Data Visualization
-        </h1>
+<div class="site-header-logo">
+    <h1 class="text-center">Data Visualization</h1>
+</div>
+
+<div class="row p-4">
+    <div class="card m-auto" style="width: 90%;">
+        <div class="card-body">
+            <label for="fileSelector">Select a file:</label>
+            <select id="fileSelector" class="form-select">
+                {% for name in fileNames %}
+                    <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+
+            <button id="plotButton" class="btn btn-primary mt-3">Plot</button>
+
+            <!-- Loading spinner -->
+            <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+            <div id="chartContainer" class="mt-4"></div>
+        </div>
     </div>
+</div>
 
-    <div class="row p-4">
-        <div class="card m-auto" style="width: 90%;">
-            <div class="card-body">
-                <div id = "chart1"></div>
-                <p>
-                    Sit sint incididunt ad anim dolore irure ad amet ad voluptate minim veniam deserunt. Cupidatat officia dolore cillum amet pariatur do. Labore nulla ullamco ad Lorem est nisi cupidatat est adipisicing eiusmod ea ut aliqua. Ea dolore tempor laborum nulla velit.
-                </p>
-            </div>
-            <div class="card-body">
-                <div id = "chart2"></div>
-                <p>
-                    Sit sint incididunt ad anim dolore irure ad amet ad voluptate minim veniam deserunt. Cupidatat officia dolore cillum amet pariatur do. Labore nulla ullamco ad Lorem est nisi cupidatat est adipisicing eiusmod ea ut aliqua. Ea dolore tempor laborum nulla velit.
-                </p>
-            </div>
-        </div>  
-    </div> 
+<!-- Plotly CDN -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-    <!-- Plotly CDN -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script>
-        var graph1 = {{ graph1JSON | safe}}
-        Plotly.plot("chart1", graph1, {})
+<script>
+document.getElementById("plotButton").addEventListener("click", function() {
+    var selectedFile = document.getElementById("fileSelector").value;
+    
+    // Show the loading spinner
+    document.getElementById("loadingSpinner").style.display = "block";
 
-        var graph2 = {{ graph2JSON | safe}}
-        Plotly.plot("chart2", graph2, {})
-    </script>
+    fetch('/plot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'selected_file': selectedFile
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.graphJSON) {
+            var graphJSON = data.graphJSON;
+            Plotly.newPlot("chartContainer", JSON.parse(graphJSON));
+        } else {
+            console.error("Error generating plot.");
+        }
+    })
+    .catch(error => console.error("Error:", error))
+    .finally(() => {
+        // Hide the loading spinner after plot is loaded
+        document.getElementById("loadingSpinner").style.display = "none";
+    });
+});
+</script>
 {% endblock %}
