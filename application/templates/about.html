@@ -1,6 +1,58 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="site-header-logo">
+
     <h1 class="text-center">About</h1>
+
+    <div>
+        <div class="content-about">
+            <img src="{{ url_for('static', filename='images/divers.webp') }}" alt="Divers" class="img-about" title="Divers">
+            <p class="about"> Traditionally, data collection, such as mapping the sea floor (bathymetry) or measuring water properties 
+                (e.g., salinity, temperature, pH), has been done manually using expensive and sophisticated equipment on vessels. 
+                This approach is <b class="about">slow, costly, inefficient, and often hinders scientific progress.</b>
+                It should also be recognized that one of the most common methods is to use divers, which inherently <b class="about">risk</b> 
+                their <b class="about">lives during expeditions.</b> In addition, some areas are inaccessible by boat, 
+                either due to legal restrictions or physical limitations, making it <b class="about">difficult to collect the necessary data.</b>
+            </p>
+        </div>
+        
+        <div class="content-about">
+            <p class="about"> <b class="about">Autonomous Underwater or Surface Vehicles (AUVs or ASVs)</b> and robotics provide an efficient, safer alternative to traditional methods. 
+                AUVs can autonomously navigate and collect data in areas that are difficult or dangerous for divers to access. 
+                Equipped with advanced sensors, they gather accurate measurements of seafloor topography and water conditions without the need 
+                for constant human involvement. This technology reduces the cost and time associated with research expeditions, 
+                while also minimizing risks to human life. As a result, AUVs streamline data collection, 
+                making marine research more accessible and sustainable.
+            </p> 
+            <img src="{{ url_for('static', filename='images/auv.webp') }}" alt="AUV" class="img-about" title="BlueROV2">   
+        </div>
+          
+    </div>
+
+    <h1>Our Team</h1>
+    <div class="content-about text-center">
+        <img src="{{ url_for('static', filename='images/gabriel_archilla.webp') }}" alt="Gabriel Archilla" title="Gabriel Archilla" width="10%">
+        <p class="names">Gabriel A. Archilla Cintron<p> 
+    </div>
+    <div class="content-about">
+        <p class="names">Jan R. Badillo Rivera</p>
+        <img src="{{ url_for('static', filename='images/jan_badillo.webp') }}" alt="Jean Badillo" title="Jean Badillo" width="10%">
+    </div>
+    <div class="content-about">
+        <img src="{{ url_for('static', filename='images/carlos_acevedo.webp') }}" alt="Carlos Acevedo" title="Carlos Acevedo" width="10%">
+        <p class="names">Carlos A. Acevedo Morales</p>
+    </div>
+
 </div>
+
+<!-- <script>
+function bigImg(x) {
+    x.style.width = "45%";
+}
+
+function normalImg(x) {
+    x.style.width = "30%";
+}
+</script> -->
+
 {% endblock %}
