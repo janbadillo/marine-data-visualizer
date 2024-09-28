@@ -52,6 +52,20 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  animation-duration: 3s;
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
 }
 
 .img-about {
@@ -59,8 +73,18 @@
   height: auto;
 }
 
-.names {
-  font-size: 2rem;
-  font-family: 'Times New Roman', Times, serif;
-  text-align: center;
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  padding: 10px;
 }
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
