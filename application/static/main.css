@@ -53,7 +53,7 @@
   align-items: center;
   gap: 20px;
   animation-duration: 3s;
-  animation-name: slidein;
+  /* animation-name: slidein; */
 }
 
 @keyframes slidein {
