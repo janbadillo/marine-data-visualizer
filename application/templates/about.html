@@ -31,20 +31,44 @@
     </div>
 
     <h1 class="text-center">Our Team</h1>
+    
     <div class="grid-container">
         <div class="item1">
-            <img src="{{ url_for('static', filename='images/gabriel_archilla.webp') }}" alt="Gabriel Archilla" title="Gabriel Archilla" width="30%">
-            <a class="nav-link" href="https://github.com/gaac-rum">Gabriel A. Archilla Cintron</a>
+            <img src="{{ url_for('static', filename='images/gabriel_archilla.webp') }}" alt="Gabriel Archilla" title="Gabriel Archilla" width="29%">
+            <br><a class="about" href="https://github.com/gaac-rum">Gabriel A. Archilla Cintrón</a>
+            <p class="about2">
+                Computer Science and Engineering<br>
+                University of Puerto Rico - Mayaguez Campus
+            </p>
         </div>
         <div class="item2">
             <img src="{{ url_for('static', filename='images/jan_badillo.webp') }}" alt="Jean Badillo" title="Jean Badillo" width="24%">
-            <a class="nav-link" href="https://github.com/janbadillo">Jean C. Badillo Rivera</a>
+            <br><a class="about" href="https://github.com/janbadillo">Jean C. Badillo Rivera</a>
+            <p class="about2">
+                Software Engineering<br>
+                University of Puerto Rico - Mayaguez Campus
+            </p>
         </div>
         <div class="item3">
             <img src="{{ url_for('static', filename='images/carlos_acevedo.webp') }}" alt="Carlos Acevedo" title="Carlos Acevedo" width="32%">
-            <a class="nav-link" href="https://github.com/AcevedoC17">Carlos A. Acevedo Morales</a>
+            <br><a class="about" href="https://github.com/AcevedoC17">Carlos A. Acevedo Morales</a>
+            <p class="about2">
+                Software Engineering<br>
+                University of Puerto Rico - Mayaguez Campus
+            </p>
         </div>  
     </div>
+
+    <h1 class="text-center">Project Mentor</h1>
+    <div class="content-about">
+        <img src="{{ url_for('static', filename='images/samuel_cardena.webp') }}" alt="Samuel Cardeña" class="img-about" title="Samuel Cardeña">
+        <p class="about">
+            <a class="about" href="https://www.linkedin.com/in/samuel-carde%C3%B1a-sanchez-448803131/">Samuel Cardeña Sanchez</a>
+            <br>Professor at Inter American University of Puerto Rico - Ponce Campus<br>
+            More infirmation...
+        </p>
+    </div>
+
 </div>
 
 {% endblock %}
