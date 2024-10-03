@@ -17,6 +17,10 @@ def index():
 def about():
     return render_template("about.html", title = "About")
 
+@app.route("/documentation")
+def documentation():
+    return render_template("documentation.html", title = "Documentation")
+
 @app.route("/plot", methods=["POST"])
 def plot():
     selected_file = request.form.get("selected_file")
