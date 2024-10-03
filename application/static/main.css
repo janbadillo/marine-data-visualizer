@@ -48,6 +48,11 @@
   text-align: justify;
 }
 
+.about2 {
+  font-size: 1rem;
+  font-family: 'Times New Roman', Times, serif;
+}
+
 .content-about {
   display: flex;
   align-items: center;
