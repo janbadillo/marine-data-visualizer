@@ -1,15 +1,11 @@
 import requests
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 # Google Drive API base URL for public access
-GOOGLE_DRIVE_API_URL = os.getenv("GOOGLE_DRIVE_API_URL")
+GOOGLE_DRIVE_API_URL = 'https://www.googleapis.com/drive/v3/files'
 # Public folder ID (seaview data)
-FOLDER_ID = os.getenv("FOLDER_ID")
+FOLDER_ID = '19wtpV2toakJXD40QcYYYgi1gESFSXdx9'
 # Google API key
-API_KEY = os.getenv("API_KEY")
+API_KEY = 'AIzaSyBLBpljoW3tkbkNhIUhw2ckQmrO_jYQC3o'
 
 def get_file_names_from_folder(): 
     # data folder in seaview2024data@gmail.com account (google drive)
