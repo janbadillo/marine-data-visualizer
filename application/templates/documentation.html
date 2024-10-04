@@ -44,40 +44,65 @@
             <lii><a href="#-navigator">-Navigator</a></lii>
             <lii><a href="#-echosounder">-Echosounder</a></lii>
             <lii><a href="#-raspberry">-Raspberry Pi</a></lii>
+            <lii><a href="#-autopilot">-Autopilot</a></lii>
         </uul>
 
         <div style="margin-left:10%;padding:1px 16px;height:1000px;">
-            <h2 style="font-family: 'Times New Roman', Times, serif;" id="components">Components</h2>
-            <h3 style="font-family: 'Times New Roman', Times, serif;" id="-navigator">Navigator Flight Controller</h3>
+            <h2 style="font-family: 'Times New Roman', Times, serif; font-size: 2.5rem; padding-bottom: 10px; text-align: center;" id="components">
+                Components
+            </h2>
+
+            <h3 class="component" id="-navigator">
+                <b>Navigator Flight Controller</b>
+            </h3>
             <div class="content-about">
                 <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator" title="Navigator" width="20%">
-                <p style="font-family: 'Times New Roman', Times, serif; font-size: 1.3rem; text-align: justify;">
+                <p class="component-about">
                     The Navigator is an ROV and robotics flight controller for the Raspberry Pi 4. 
                     It has an onboard IMU, compass, barometer, and ADC sensors as well as 16 PWM outputs 
                     and numerous serial and I2C expansion ports. The Navigator is used on the BlueROV2 and BlueBoat 
                     in conjunction with the BlueOS software, but can also be used for a wide range of robotics applications!
                 </p>
             </div>
-            <h3 style="font-family: 'Times New Roman', Times, serif;" id="-echosounder">Ping2 Sonar Altimeter and Echosounder</h3>
+
+            <h3 class="component" id="-echosounder">
+                <b>Ping2 Sonar Altimeter and Echosounder</b>
+            </h3>
             <div class="content-about">
                 <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Echosounder" title="Echosounder" width="20%">
-                <p style="font-family: 'Times New Roman', Times, serif; font-size: 1.3rem; text-align: justify;">
+                <p class="component-about"">
                     The Ping2 is a high-performance ultrasonic distance sensor for use with the BlueROV2. 
                     It has a 500m range with 1cm resolution and an accuracy of +/- 2cm. The Ping2 is used for 
                     altitude control, terrain following, and obstacle avoidance. It is also used for bathymetric 
                     mapping and other acoustic sensing applications.
                 </p>
             </div>
-            <h3 style="font-family: 'Times New Roman', Times, serif;" id="-raspberry">Raspberry Pi</h3>
+
+            <h3 class="component" id="-raspberry">
+                <b>Raspberry Pi</b>
+            </h3>
             <div class="content-about">
                 <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" title="Raspberry Pi" width="20%">
-                <p style="font-family: 'Times New Roman', Times, serif; font-size: 1.3rem; text-align: justify;">
+                <p class="component-about">
                     The Raspberry Pi is a low-cost, high-performance computer that is used in a wide range of robotics 
                     applications. It is used as the main computer on the BlueROV2 and BlueBoat and runs the BlueOS software. 
                     The Raspberry Pi has a powerful ARM processor, HDMI output, USB ports, and GPIO pins for interfacing with 
                     sensors and other devices.
                 </p>
             </div>
+
+            <h3 class="component" id="-autopilot">
+                <b>Autopilot</b>
+            </h3>
+            <div class="content-about">
+                <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" title="Autopilot" width="20%">
+                <p class="component-about">
+                    In the ArduSub control system, the autopilot board (also known as a flight controller) 
+                    is the component which the ArduSub firmware is loaded onto. The autopilot processes the pilot input and sensor data, 
+                    and controls the motors, lights, servos, and relays on the vehicle. It has an onboard IMU, compass, barometer, 
+                    and ADC sensors as well as 16 PWM outputs and numerous serial and I2C expansion ports. 
+                    The autopilot is used in conjunction with the BlueOS software to control the ROV and boat in autonomous mode.
+                </p>
         </div>
     </body>
 </html>
