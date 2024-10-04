@@ -45,9 +45,10 @@
             <lii><a href="#-echosounder">-Echosounder</a></lii>
             <lii><a href="#-raspberry">-Raspberry Pi</a></lii>
             <lii><a href="#-autopilot">-Autopilot</a></lii>
+            <lii><a href="#-pendant">-Pendant</a></lii>
         </uul>
 
-        <div style="margin-left:10%;padding:1px 16px;height:1000px;">
+        <div style="margin-left: 10%; padding: 0px 16px; height: auto;">
             <h2 style="font-family: 'Times New Roman', Times, serif; font-size: 2.5rem; padding-bottom: 10px; text-align: center;" id="components">
                 Components
             </h2>
@@ -102,6 +103,21 @@
                     and controls the motors, lights, servos, and relays on the vehicle. It has an onboard IMU, compass, barometer, 
                     and ADC sensors as well as 16 PWM outputs and numerous serial and I2C expansion ports. 
                     The autopilot is used in conjunction with the BlueOS software to control the ROV and boat in autonomous mode.
+                </p>
+            </div>
+
+            <h3 class="component" id="-pendant">
+                <b>Pendant MX Temperature/Light Data Logger</b>
+            </h3>
+            <div class="content-about">
+                <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Control Pendant" title="Control Pendant" width="20%">
+                <p class="component-about">
+                    The Control Pendant is a handheld controller for the BlueROV2 and BlueBoat. 
+                    It has a joystick for controlling the vehicle's thrusters, as well as buttons for 
+                    controlling lights, cameras, and other accessories. The Control Pendant is used for 
+                    manual piloting of the vehicle in addition to the BlueOS software. It a waterproof 
+                    temperature/light-level logger equipped with the power of Bluetooth to deliver accurate 
+                    data straight to your mobile device or Windows computer.
                 </p>
         </div>
     </body>
