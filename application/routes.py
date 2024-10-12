@@ -41,13 +41,17 @@ def plot():
         fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z, mode='markers')])
         fig.update_traces(marker=dict(size=5, color=z, colorscale='Viridis', opacity=0.8))
 
-        fig.update_layout(title="3D scatterplot of " + selected_file,
-                        scene=dict(xaxis_title='Longitude',
-                                    yaxis_title='Latitude',
-                                    zaxis_title='Depth in Feet'))
+        fig.update_layout(
+            title="3D scatterplot of " + selected_file,
+            scene=dict(
+            xaxis_title='Longitude',
+            yaxis_title='Latitude',
+            zaxis_title='Depth in Feet'
+            ),
+            width=800,  # Set the width manually
+            height=620,  # Set the height manually
+        )
         
-        # Plot the CSV data using Plotly Express
-        # fig = px.line(merged_df, x="Latitude", y="Longitude", title=f"Plot for {selected_file}")
         graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         
         return jsonify({"graphJSON": graphJSON})
