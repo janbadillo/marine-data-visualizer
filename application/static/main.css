@@ -20,6 +20,14 @@
   font-family: 'Times New Roman', Times, serif;
 }
 
+.p-4 {
+  padding: 0rem !important;
+}
+
+.mt-3, .my-3 {
+  margin-top: 0rem !important;
+}
+
 .navbar-text {
   color: rgb(250, 250, 250);
 }
