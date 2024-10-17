@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
             integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
         <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         {% if title %}
             <title> SeaView {{title}}</title>
         {% else %}
@@ -41,22 +42,33 @@
             </div>
         </nav>
 
-        <uul>
-            <lii><a href="/documentation">Top</a></lii>
-            <lii><a href="#components">Components</a></lii>
-            <lii><a href="#-navigator">-Navigator</a></lii>
-            <lii><a href="#-echosounder">-Echosounder</a></lii>
-            <lii><a href="#-raspberry">-Raspberry Pi</a></lii>
-            <lii><a href="#-autopilot">-Autopilot</a></lii>
-            <lii><a href="#-pendant">-Pendant</a></lii>
-        </uul>
+        <div class="d-flex">
+            <div class="bg-light" id="sidebar-wrapper" style="width: 150px; position: fixed; height: 100%; overflow-y: auto;">
+            <div class="sidebar-heading">Documentation</div>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item list-group-item-action bg-light dropdown">
+                <a class="dropdown-toggle" id="componentsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Components
+                </a>
+                <div class="dropdown-menu" aria-labelledby="componentsDropdown">
+                    <a class="dropdown-item" href="#components">Components</a>
+                    <a class="dropdown-item" href="#navigator">Navigator</a>
+                    <a class="dropdown-item" href="#echosounder">Echosounder</a>
+                    <a class="dropdown-item" href="#raspberry">Raspberry Pi</a>
+                    <a class="dropdown-item" href="#autopilot">Autopilot</a>
+                    <a class="dropdown-item" href="#pendant">Pendant</a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
 
         <div style="margin-left: 10%; padding: 0px 16px; height: auto;">
             <h2 style="font-family: 'Times New Roman', Times, serif; font-size: 2.5rem; padding-bottom: 10px; text-align: center;" id="components">
                 Components
             </h2>
 
-            <h3 class="component" id="-navigator">
+            <h3 class="component" id="navigator">
                 <b>Navigator Flight Controller</b>
             </h3>
             <div class="content-about">
@@ -69,7 +81,7 @@
                 </p>
             </div>
 
-            <h3 class="component" id="-echosounder">
+            <h3 class="component" id="echosounder">
                 <b>Ping2 Sonar Altimeter and Echosounder</b>
             </h3>
             <div class="content-about">
@@ -82,7 +94,7 @@
                 </p>
             </div>
 
-            <h3 class="component" id="-raspberry">
+            <h3 class="component" id="raspberry">
                 <b>Raspberry Pi</b>
             </h3>
             <div class="content-about">
@@ -95,7 +107,7 @@
                 </p>
             </div>
 
-            <h3 class="component" id="-autopilot">
+            <h3 class="component" id="autopilot">
                 <b>Autopilot</b>
             </h3>
             <div class="content-about">
@@ -109,7 +121,7 @@
                 </p>
             </div>
 
-            <h3 class="component" id="-pendant">
+            <h3 class="component" id="pendant">
                 <b>Pendant MX Temperature/Light Data Logger</b>
             </h3>
             <div class="content-about">
@@ -123,6 +135,10 @@
                     data straight to your mobile device or Windows computer.
                 </p>
         </div>
+
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
 
