@@ -9,9 +9,9 @@ import plotly.graph_objects as go
 from application.files_drive import get_file_id_from_name, get_file_names_from_folder
 
 @app.route("/")
-def index():
+def home():
     file_names = get_file_names_from_folder()
-    return render_template("index.html", fileNames=file_names, title = "Home")
+    return render_template("home.html", fileNames=file_names, title = "Home")
 
 @app.route("/about")
 def about():
@@ -20,6 +20,11 @@ def about():
 @app.route("/documentation")
 def documentation():
     return render_template("documentation.html", title = "Documentation")
+
+@app.route("/graph")
+def graph():
+    file_names = get_file_names_from_folder()
+    return render_template("index.html", fileNames=file_names, title = "Graph")
 
 @app.route("/plot", methods=["POST"])
 def plot():
