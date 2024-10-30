@@ -5,82 +5,26 @@ import json
 import plotly
 import plotly_express as px
 import plotly.graph_objects as go
-import requests
 
-# Google Drive API base URL for public access
-GOOGLE_DRIVE_API_URL = 'https://www.googleapis.com/drive/v3/files'
-
-#public folder ID (seaview data)
-FOLDER_ID = '19wtpV2toakJXD40QcYYYgi1gESFSXdx9'
-
-#Google API key
-API_KEY = 'AIzaSyBLBpljoW3tkbkNhIUhw2ckQmrO_jYQC3o'
-
-def get_file_names_from_folder(): # data folder in seaview2024data@gmail.com account (google drive)
-    """
-    Function to fetch file names from a public Google Drive folder
-    """
-    try:
-        # Define the parameters for the Google Drive API request
-        params = {
-            'q': f"'{FOLDER_ID}' in parents and trashed = false",
-            'fields': 'files(id, name)',
-            'key': API_KEY,
-        }
-
-        # Perform the GET request to the Google Drive API
-        response = requests.get(GOOGLE_DRIVE_API_URL, params=params)
-
-        # Check if the response is successful
-        if response.status_code == 200:
-            files = response.json().get('files', [])
-            # Extract and return the file names
-            file_names = [file['name'] for file in files]
-            return file_names
-        else:
-            return []
-
-    except Exception as e:
-        print(f"Error fetching files: {e}")
-        return []
-
-def get_file_id_from_name(file_name):
-    """
-    Function to fetch file ID by matching file name from a public Google Drive folder.
-    """
-    try:
-        # Define the parameters for the Google Drive API request
-        params = {
-            'q': f"'{FOLDER_ID}' in parents and trashed = false",
-            'fields': 'files(id, name)',
-            'key': API_KEY,
-        }
-
-        # Perform the GET request to the Google Drive API
-        response = requests.get(GOOGLE_DRIVE_API_URL, params=params)
-
-        # Check if the response is successful
-        if response.status_code == 200:
-            files = response.json().get('files', [])
-            
-            # Iterate through the list of files and return the ID if the name matches
-            for file in files:
-                if file['name'] == file_name:
-                    return file['id']
-            
-            # If no match is found, return None or an error message
-            return None
-        else:
-            return None
-
-    except Exception as e:
-        print(f"Error fetching file ID: {e}")
-        return None
+from application.files_drive import get_file_id_from_name, get_file_names_from_folder
 
 @app.route("/")
-def index():
+def home():
     file_names = get_file_names_from_folder()
-    return render_template("index.html", fileNames=file_names, title = "Test")
+    return render_template("home.html", fileNames=file_names, title = "Home")
+
+@app.route("/about")
+def about():
+    return render_template("about.html", title = "About")
+
+@app.route("/documentation")
+def documentation():
+    return render_template("documentation.html", title = "Documentation")
+
+@app.route("/graph")
+def graph():
+    file_names = get_file_names_from_folder()
+    return render_template("index.html", fileNames=file_names, title = "Graph")
 
 @app.route("/plot", methods=["POST"])
 def plot():
@@ -102,13 +46,17 @@ def plot():
         fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z, mode='markers')])
         fig.update_traces(marker=dict(size=5, color=z, colorscale='Viridis', opacity=0.8))
 
-        fig.update_layout(title="3D scatterplot of " + selected_file,
-                        scene=dict(xaxis_title='Longitude',
-                                    yaxis_title='Latitude',
-                                    zaxis_title='Depth in Feet'))
+        fig.update_layout(
+            title="3D scatterplot of " + selected_file,
+            scene=dict(
+            xaxis_title='Longitude',
+            yaxis_title='Latitude',
+            zaxis_title='Depth in Feet'
+            ),
+            width=800,  # Set the width manually
+            height=620,  # Set the height manually
+        )
         
-        # Plot the CSV data using Plotly Express
-        # fig = px.line(merged_df, x="Latitude", y="Longitude", title=f"Plot for {selected_file}")
         graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         
         return jsonify({"graphJSON": graphJSON})

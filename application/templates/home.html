@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+            integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+        {% if title %}
+            <title> SeaView {{title}}</title>
+        {% else %}
+            <title> No title given in route! </title>
+        {% endif %}
+    </head>
+
+    <style>
+        .container {
+            height: 500px;
+            background: #0f1bf6;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: none;
+        }
+        .content {
+            font-family: Arial;
+            text-align: center;
+            font-size: 2em;
+            color: rgba(255,255,255, .8);
+        }
+
+        .waves {
+            position: absolute;
+            /* left: 0;
+            right: 0;
+            height: 200px;
+            bottom: 0; */
+            bottom: -135px;
+            height: 527px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .wave {
+            position: absolute;
+            left: -180px;
+            bottom: 0;
+            /*width: 200px;*/
+            /*height: 200px;*/
+            /*width: 100%;*/
+            /*border-radius: 50%;*/
+            /*background:rgba(0,0,0, .3);*/
+            width: 2402px;
+            height: 427px;
+            background: url(https://static.platzi.com/media/files/waves_c8551f5d-ecf6-4a81-ae1d-f3a0ad55ba10.png) center bottom no-repeat;
+            animation: 5s wave ease-in-out infinite alternate;
+        }
+        .wave.a {
+            background-position: 0 -854px;
+        }
+        .wave.b {
+            background-position: 0 -427px;
+            animation-delay: .6s;
+        }
+        .wave.c {
+            background-position: 0 0;
+            animation-delay: 1.2s;
+        }
+        /*.container {
+        position: absolute;
+        }*/
+        @keyframes wave {
+            0% {
+                transform: translate(0 , 0);
+            }
+            50% {
+                transform: translate(-80px, 30px);
+            }
+            100% {
+                transform: translate(160px, -60px);
+            }
+        }
+    </style>
+
+    <body>
+        
+        <div style="text-align: center; background-color: #007bff; padding: 1.5rem;">
+            <a href="/" style="margin: 0 15px; color: white;">Home</a>
+            <a href="/graph" style="margin: 0 15px; color: white;">Graph</a>
+            <a href="/about" style="margin: 0 15px; color: white;">About</a>
+            <a href="/documentation" style="margin: 0 15px; color: white;">Documentation</a>
+        </div>
+
+        <div class="container">
+            <div class="site-header-logo">
+                <h1 class="text-center" style="color: yellow; font-size: 10rem;">Welcome to SeaView!</h1>
+            </div>
+            <div class="waves">
+                <div class="wave circulo a"></div>
+                <div class="wave circulo b"></div>
+                <div class="wave circulo c"></div>
+            </div>
+        </div>
+
+        <div>
+            <h1>More in soon!...</h1>
+        </div>
+    </body>
+</html>
