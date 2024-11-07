@@ -5,6 +5,7 @@ import json
 import plotly
 import plotly_express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from application.files_drive import get_file_id_from_name, get_file_names_from_folder
 
@@ -43,20 +44,47 @@ def plot():
         y = depth_data['Longitude'].values
         z = depth_data['Depth_in_Feet'].values
 
-        fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z, mode='markers')])
-        fig.update_traces(marker=dict(size=5, color=z, colorscale='Viridis', opacity=0.8))
-
-        fig.update_layout(
-            title="3D scatterplot of " + selected_file,
-            scene=dict(
-            xaxis_title='Longitude',
-            yaxis_title='Latitude',
-            zaxis_title='Depth in Feet'
-            ),
-            width=800,  # Set the width manually
-            height=620,  # Set the height manually
+        # Create a subplot with two columns
+        fig = make_subplots(
+            rows=1, cols=2,
+            column_widths=[0.5, 0.5],  # Adjusted column widths to make them closer
+            subplot_titles=("3D Scatterplot", "Data Table"),
+            specs=[[{'type': 'scatter3d'}, {'type': 'table'}]]
         )
-        
+
+        # Add the 3D scatterplot to the first column
+        fig.add_trace(
+            go.Scatter3d(x=x, y=y, z=z, mode='markers', 
+                 marker=dict(size=5, color=z, colorscale='Viridis', opacity=0.8)),
+            row=1, col=1
+        )
+
+        # Add the table to the second column
+        fig.add_trace(
+            go.Table(
+                header=dict(
+                    values=list(df.columns),
+                    fill_color='rgb(127, 255, 212)',
+                    align='left',
+                    font=dict(size=12, color='black')
+                ),
+                cells=dict(
+                    values=[df[col] for col in df.columns],
+                    fill_color='lavender',
+                    align='left',
+                    font=dict(size=11, color='black')
+                )
+            ),
+            row=1, col=2
+        )
+
+        # Update layout
+        fig.update_layout(
+            title="3D Scatterplot and Data Table for " + selected_file,
+            width=1100,
+            height=620
+        )
+
         graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
         
         return jsonify({"graphJSON": graphJSON})
