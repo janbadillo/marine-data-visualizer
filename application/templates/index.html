@@ -6,59 +6,178 @@
 
 <div class="row p-4">
     <div class="card m-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
-        <div class="card-body">
-            <label for="fileSelector">Select a file:</label>
-            <select id="fileSelector" class="form-select">
-                {% for name in fileNames %}
-                    <option value="{{ name }}">{{ name }}</option>
-                {% endfor %}
-            </select>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Upload CSV</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="select-tab" data-bs-toggle="tab" data-bs-target="#select" type="button" role="tab">Select File</button>
+            </li>
+        </ul>
 
-            <button id="plotButton" class="btn btn-primary mt-3">Plot</button>
+        <div class="tab-content card-body">
+            <!-- Tab 1: CSV Upload -->
+            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                <!--
+                <div class="mb-3">
+                    <label>Drag and drop a CSV file here, or click to select a file:</label>
+                    <div id="dropZone" class="p-3 border border-primary" style="cursor: pointer;">
+                        <p>Drop your CSV file here</p>
+                    </div>
+                    <div id="chartContainerUpload" class="mt-4"></div>
+                </div>
+                -->
 
-            <!-- Loading spinner -->
-            <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
-                <span class="sr-only">Loading...</span>
+                <form action="/target"
+                    class="dropzone mt-4 border-dashed rounded-2 min-h-0"
+                    id="csv-dropzone"></form>
+
             </div>
 
-            <div id="chartContainer" class="mt-4"></div>
+            <!-- Tab 2: File Selection -->
+            <div class="tab-pane fade" id="select" role="tabpanel">
+                <label for="fileSelector">Select a file:</label>
+                <select id="fileSelector" class="form-select">
+                    {% for name in fileNames %}
+                        <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <button id="plotButton" class="btn btn-primary mt-3">Plot</button>
+                <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div id="chartContainerSelect" class="mt-4"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Plotly CDN -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Access the already initialized Dropzone instance
+        let existingDropzone = Dropzone.forElement("#csv-dropzone");
+    
+        // Modify its properties
+        existingDropzone.options.acceptedFiles = ".csv, text/csv, application/csv, application/vnd.ms-excel, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values";
+        existingDropzone.options.autoProcessQueue = false; // Disable automatic uploads
+        existingDropzone.options.addRemoveLinks = true;
+        existingDropzone.options.dictRemoveFile = "Remove";
+
+        // Add custom event listeners
+        existingDropzone.on("addedfile", function (file) {
+            console.log(`CSV file added: ${file.name}`);
+            
+            // Simulate progress update
+            let progress = 0;
+            let interval = setInterval(() => {
+                progress += 10; // Increment progress
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval); // Stop simulation when complete
+                    existingDropzone.emit("complete", file); // Mark as complete
+                }
+                existingDropzone.emit("uploadprogress", file, progress); // Update progress bar
+            }, 50);
+
+            // Use FileReader to read the file for local processing
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                console.log(`File content:\n${event.target.result}`);
+                // Example: Call a function to process CSV content
+                processCsv(event.target.result);
+            };
+            reader.readAsText(file); // Read file as text for CSV processing
+        });
+    
+        existingDropzone.on("removedfile", function (file) {
+            console.log(`File removed: ${file.name}`);
+        });
+    
+        existingDropzone.on("error", function (file, message) {
+            console.error(`Error with file: ${file.name}. Message: ${message}`);
+        });
+    
+        // Example function to process CSV file content
+        function processCsv(data) {
+            console.log("Processing CSV data...");
+            // Add your custom logic for handling CSV data
+        }
+    });
+</script>
+<!--
+<script src="../node_modules/dropzone/dist/min/dropzone.min.js"></script>
+<script src="../assets/js/vendors/dropzone.js"></script>
 
 <script>
-document.getElementById("plotButton").addEventListener("click", function() {
-    var selectedFile = document.getElementById("fileSelector").value;
-    
-    // Show the loading spinner
-    document.getElementById("loadingSpinner").style.display = "block";
+// Drag-and-drop functionality
+const dropZone = document.getElementById("dropZone");
 
-    fetch('/plot', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'selected_file': selectedFile
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.graphJSON) {
-            var graphJSON = data.graphJSON;
-            Plotly.newPlot("chartContainer", JSON.parse(graphJSON));
-        } else {
-            console.error("Error generating plot.");
-        }
-    })
-    .catch(error => console.error("Error:", error))
-    .finally(() => {
-        // Hide the loading spinner after plot is loaded
-        document.getElementById("loadingSpinner").style.display = "none";
-    });
+dropZone.addEventListener("dragover", (event) => {
+    event.preventDefault(); // Prevent default behavior to allow drop
+    event.stopPropagation();
+    dropZone.classList.add("drag-over"); // Add class to change border color
+    //dropZone.style.borderColor = "green";
+    console.log("Cursor is now over the drop-zone!");
 });
+
+dropZone.addEventListener("dragleave", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dropZone.classList.remove("drag-over"); // Remove class to reset color
+    console.log("Cursor is now away from drop-zone!");
+});
+
+dropZone.addEventListener("drop", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dropZone.classList.remove("drag-over"); // Remove class after drop
+
+    const file = event.dataTransfer.files[0];
+    if (file && file.name.endsWith(".csv")) {
+        console.log("CSV file dropped:", file.name);
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const data = e.target.result;
+            console.log("CSV file content loaded.");
+            processCSVData(data, "chartContainerUpload");
+        };
+        reader.onerror = function () {
+            console.error("Error reading file.");
+        };
+        reader.readAsText(file);
+    } else {
+        console.error("Only CSV files are supported.");
+        alert("Please drop a valid .csv file.");
+    }
+});
+
+// Function to process CSV data and plot
+function processCSVData(csvData, containerId) {
+    console.log("Processing CSV data for plotting...");
+
+    // Parse the CSV data
+    const rows = csvData.trim().split("\n").map(row => row.split(","));
+    const headers = rows[0];
+    const data = rows.slice(1).map(row => row.map(Number)); // Converting data rows to numbers
+
+    if (data.length === 0 || data[0].length < 2) {
+        console.error("Insufficient data to plot.");
+        alert("The CSV file must have at least two columns of numeric data.");
+        return;
+    }
+
+    // Assuming columns for x and y values
+    const trace = {
+        x: data.map(row => row[0]), // x values from first column
+        y: data.map(row => row[1]), // y values from second column
+        mode: "lines",
+    };
+    Plotly.newPlot(containerId, [trace]);
+    console.log("Plot created successfully in", containerId);
+}
 </script>
+-->
 {% endblock %}

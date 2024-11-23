@@ -118,3 +118,16 @@ lii a:hover{
   background-color: #555;
   color: white;
 }
+
+#dropZone {
+  border: 4px dashed red !important;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s; /* Smooth transition for border color change */
+}
+
+/* Style for when the drag is over the element */
+#dropZone.drag-over {
+  border-color: green !important;
+}
