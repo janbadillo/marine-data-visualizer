@@ -5,7 +5,7 @@
 </div>
 
 <div class="row p-4">
-    <div class="card m-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
+    <div class="card w-100 mx-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Upload CSV</button>
@@ -31,7 +31,10 @@
                 <form action="/target"
                     class="dropzone mt-4 border-dashed rounded-2 min-h-0"
                     id="csv-dropzone"></form>
-
+                <div class="d-flex justify-content-center">
+                    <button id="plot-button" class="btn btn-primary mt-3">Plot</button>
+                </div>
+                <div id="plot-container"></div>
             </div>
 
             <!-- Tab 2: File Selection -->
@@ -84,9 +87,8 @@
             // Use FileReader to read the file for local processing
             let reader = new FileReader();
             reader.onload = function (event) {
-                console.log(`File content:\n${event.target.result}`);
-                // Example: Call a function to process CSV content
-                processCsv(event.target.result);
+                fileContent = event.target.result; // Store CSV content
+                console.log(`File content loaded:\n${fileContent}`);
             };
             reader.readAsText(file); // Read file as text for CSV processing
         });
@@ -98,13 +100,70 @@
         existingDropzone.on("error", function (file, message) {
             console.error(`Error with file: ${file.name}. Message: ${message}`);
         });
-    
-        // Example function to process CSV file content
-        function processCsv(data) {
-            console.log("Processing CSV data...");
-            // Add your custom logic for handling CSV data
-        }
     });
+
+    // Function to process CSV and generate the 3D scatter plot
+    async function generate3DScatterPlot() {
+        if (!fileContent) {
+            alert("Please add a CSV file first!");
+            return;
+        }
+
+        try {
+            // Parse CSV into rows
+            let rows = fileContent.trim().split("\n").map(row => row.split(","));
+            if (rows.length < 2) {
+                alert("CSV file must have at least two rows!");
+                return;
+            }
+
+            // Extract headers and data
+            let headers = rows[0];
+            let data = rows.slice(1);
+
+            // Ensure there are at least three columns
+            if (headers.length < 3) {
+                alert("CSV file must have at least three columns for X, Y, and Z coordinates!");
+                return;
+            }
+
+            // Map data to columns
+            let x = data.map(row => parseFloat(row[0]));
+            let y = data.map(row => parseFloat(row[1]));
+            let z = data.map(row => parseFloat(row[2]));
+
+            // Create 3D scatter plot
+            let trace = {
+                x: x,
+                y: y,
+                z: z,
+                mode: "markers",
+                type: "scatter3d",
+                marker: {
+                    size: 5,
+                    color: z, // Use Z value for coloring
+                    colorscale: "Viridis",
+                },
+            };
+
+            let layout = {
+                title: "3D Scatter Plot",
+                scene: {
+                    xaxis: { title: headers[0] },
+                    yaxis: { title: headers[1] },
+                    zaxis: { title: headers[2] },
+                },
+            };
+
+            Plotly.newPlot("plot-container", [trace], layout);
+        } catch (error) {
+            console.error("Error generating scatter plot:", error);
+            alert("There was an error processing the CSV file. Please ensure it is correctly formatted.");
+        }
+    }
+
+    // Add event listener to the plot button
+    document.getElementById("plot-button").addEventListener("click", generate3DScatterPlot);
 </script>
 <!--
 <script src="../node_modules/dropzone/dist/min/dropzone.min.js"></script>
