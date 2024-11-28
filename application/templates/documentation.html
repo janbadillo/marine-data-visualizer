@@ -2,20 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="description" content="SeaView - Your Ocean Data Visualization Tool">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
-    {% if title %}
-        <title>SeaView - {{title}}</title>
-    {% else %}
-        <title>SeaView - Ocean Data Visualization</title>
-    {% endif %}
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+            integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+        {% if title %}
+            <title> SeaView {{title}}</title>
+        {% else %}
+            <title> No title given in route! </title>
+        {% endif %}
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif; 
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
         .component {
             margin-top: 2rem;
@@ -34,15 +37,27 @@
         .component-about {
             flex: 1;
         }
-        #table-of-contents {
+        #sidebar {
+            position: fixed;
+            top: 100px; /* Increased from 56px */
+            left: 0;
+            height: calc(100vh - 100px); /* Adjusted to account for new top position */
+            width: 141px;
             background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 0.25rem;
-            margin-bottom: 2rem;
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
             overflow-y: auto;
+            z-index: 1000;
+            padding: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar.collapsed {
+            transform: translateX(-250px);
+        }
+        #content {
+            margin-left: 84px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        #content.full-width {
+            margin-left: 0;
         }
         #table-of-contents ul {
             list-style-type: none;
@@ -75,10 +90,36 @@
         .dropdown-toggle.open::after {
             transform: rotate(180deg);
         }
+        #sidebar-toggle {
+            position: fixed;
+            top: 114px; /* Increased from 70px */
+            left: 10px;
+            z-index: 1001;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+        }
         @media (max-width: 768px) {
-            #table-of-contents {
-                position: static;
-                max-height: none;
+            #sidebar {
+                transform: translateX(-250px);
+            }
+            #content {
+                margin-left: 0;
+            }
+            #sidebar.collapsed {
+                transform: translateX(0);
+            }
+            #content.full-width {
+                margin-left: 0;
             }
         }
     </style>
@@ -101,7 +142,7 @@
               <li class="nav-item">
                 <a class="nav-link text-white" href="/about">About</a>
               </li>
-              <li class="nav-item"></li>
+              <li class="nav-item">
                 <a class="nav-link text-white" href="/documentation">Documentation</a>
               </li>
             </ul>
@@ -109,109 +150,120 @@
         </div>
     </nav>
 
-    <main class="container mt-4">
-        <div class="row">
-            <div class="col-md-3">
-                <nav id="table-of-contents" aria-label="Table of contents">
-                    <h2 class="h5">Table of Contents</h2>
+    <button id="sidebar-toggle" title="Toggle Sidebar">📂</button>
+
+    <div id="sidebar">
+        <nav id="table-of-contents" aria-label="Table of contents">
+            <h2 class="h5"><br></h2>
+            <ul>
+                <li>
+                    <a href="#components" class="dropdown-toggle">Components</a>
                     <ul>
-                        <li>
-                            <a href="#components" class="dropdown-toggle">Components</a>
-                            <ul>
-                                <li><a href="#navigator">Navigator</a></li>
-                                <li><a href="#echosounder">Echosounder</a></li>
-                                <li><a href="#raspberry">Raspberry Pi</a></li>
-                                <li><a href="#autopilot">Autopilot</a></li>
-                                <li><a href="#pendant">Pendant</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="#navigator">Navigator</a></li>
+                        <li><a href="#echosounder">Echosounder</a></li>
+                        <li><a href="#raspberry">Raspberry Pi</a></li>
+                        <li><a href="#autopilot">Autopilot</a></li>
+                        <li><a href="#pendant">Pendant</a></li>
                     </ul>
-                </nav>
-            </div>
-            <div class="col-md-9">
-                <section id="components">
-                    <h2 class="text-center mb-4">Components</h2>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
-                    <article id="navigator" class="component">
-                        <h3>Navigator Flight Controller</h3>
-                        <div class="content-about">
-                            <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator Flight Controller" width="200">
-                            <p class="component-about">
-                                The Navigator is an ROV and robotics flight controller for the Raspberry Pi 4. 
-                                It has an onboard IMU, compass, barometer, and ADC sensors as well as 16 PWM outputs 
-                                and numerous serial and I2C expansion ports. The Navigator is used on the BlueROV2 and BlueBoat 
-                                in conjunction with the BlueOS software, but can also be used for a wide range of robotics applications!
-                            </p>
-                        </div>
-                    </article>
+    <div id="content" style="padding-left: 5rem; padding-right: 5rem;">
+        <main class="container-fluid mt-5 pt-5">
+            <section id="components">
+                <h2 class="text-center mb-4">Components</h2>
 
-                    <article id="echosounder" class="component">
-                        <h3>Ping2 Sonar Altimeter and Echosounder</h3>
-                        <div class="content-about">
-                            <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Ping2 Sonar Altimeter and Echosounder" width="200">
-                            <p class="component-about">
-                                The Ping2 is a high-performance ultrasonic distance sensor for use with the BlueROV2. 
-                                It has a 500m range with 1cm resolution and an accuracy of +/- 2cm. The Ping2 is used for 
-                                altitude control, terrain following, and obstacle avoidance. It is also used for bathymetric 
-                                mapping and other acoustic sensing applications.
-                            </p>
-                        </div>
-                    </article>
+                <article id="navigator" class="component">
+                    <h3>Navigator Flight Controller</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator Flight Controller" width="200">
+                        <p class="component-about" style="color: black;">
+                            The Navigator is an ROV and robotics flight controller for the Raspberry Pi 4. 
+                            It has an onboard IMU, compass, barometer, and ADC sensors as well as 16 PWM outputs 
+                            and numerous serial and I2C expansion ports. The Navigator is used on the BlueROV2 and BlueBoat 
+                            in conjunction with the BlueOS software, but can also be used for a wide range of robotics applications!
+                        </p>
+                    </div>
+                </article>
 
-                    <article id="raspberry" class="component">
-                        <h3>Raspberry Pi</h3>
-                        <div class="content-about">
-                            <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" width="200">
-                            <p class="component-about">
-                                The Raspberry Pi is a low-cost, high-performance computer that is used in a wide range of robotics 
-                                applications. It is used as the main computer on the BlueROV2 and BlueBoat and runs the BlueOS software. 
-                                The Raspberry Pi has a powerful ARM processor, HDMI output, USB ports, and GPIO pins for interfacing with 
-                                sensors and other devices.
-                            </p>
-                        </div>
-                    </article>
+                <article id="echosounder" class="component">
+                    <h3>Ping2 Sonar Altimeter and Echosounder</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Ping2 Sonar Altimeter and Echosounder" width="200">
+                        <p class="component-about" style="color: black;">
+                            The Ping2 is a high-performance ultrasonic distance sensor for use with the BlueROV2. 
+                            It has a 500m range with 1cm resolution and an accuracy of +/- 2cm. The Ping2 is used for 
+                            altitude control, terrain following, and obstacle avoidance. It is also used for bathymetric 
+                            mapping and other acoustic sensing applications.
+                        </p>
+                    </div>
+                </article>
 
-                    <article id="autopilot" class="component">
-                        <h3>Autopilot</h3>
-                        <div class="content-about">
-                            <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" width="200">
-                            <p class="component-about">
-                                In the ArduSub control system, the autopilot board (also known as a flight controller) 
-                                is the component which the ArduSub firmware is loaded onto. The autopilot processes the pilot input and sensor data, 
-                                and controls the motors, lights, servos, and relays on the vehicle. It has an onboard IMU, compass, barometer, 
-                                and ADC sensors as well as 16 PWM outputs and numerous serial and I2C expansion ports. 
-                                The autopilot is used in conjunction with the BlueOS software to control the ROV and boat in autonomous mode.
-                            </p>
-                        </div>
-                    </article>
+                <article id="raspberry" class="component">
+                    <h3>Raspberry Pi</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" width="200">
+                        <p class="component-about" style="color: black;">
+                            The Raspberry Pi is a low-cost, high-performance computer that is used in a wide range of robotics 
+                            applications. It is used as the main computer on the BlueROV2 and BlueBoat and runs the BlueOS software. 
+                            The Raspberry Pi has a powerful ARM processor, HDMI output, USB ports, and GPIO pins for interfacing with 
+                            sensors and other devices.
+                        </p>
+                    </div>
+                </article>
 
-                    <article id="pendant" class="component">
-                        <h3>Pendant MX Temperature/Light Data Logger</h3>
-                        <div class="content-about">
-                            <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Pendant MX Temperature/Light Data Logger" width="200">
-                            <p class="component-about">
-                                The Control Pendant is a handheld controller for the BlueROV2 and BlueBoat. 
-                                It has a joystick for controlling the vehicle's thrusters, as well as buttons for 
-                                controlling lights, cameras, and other accessories. The Control Pendant is used for 
-                                manual piloting of the vehicle in addition to the BlueOS software. It a waterproof 
-                                temperature/light-level logger equipped with the power of Bluetooth to deliver accurate 
-                                data straight to your mobile device or Windows computer.
-                            </p>
-                        </div>
-                    </article>
-                </section>
-            </div>
-        </div>
-    </main>
+                <article id="autopilot" class="component">
+                    <h3>Autopilot</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" width="200">
+                        <p class="component-about" style="color: black;">
+                            In the ArduSub control system, the autopilot board (also known as a flight controller) 
+                            is the component which the ArduSub firmware is loaded onto. The autopilot processes the pilot input and sensor data, 
+                            and controls the motors, lights, servos, and relays on the vehicle. It has an onboard IMU, compass, barometer, 
+                            and ADC sensors as well as 16 PWM outputs and numerous serial and I2C expansion ports. 
+                            The autopilot is used in conjunction with the BlueOS software to control the ROV and boat in autonomous mode.
+                        </p>
+                    </div>
+                </article>
+
+                <article id="pendant" class="component">
+                    <h3>Pendant MX Temperature/Light Data Logger</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Pendant MX Temperature/Light Data Logger" width="200">
+                        <p class="component-about" style="color: black;">
+                            The Control Pendant is a handheld controller for the BlueROV2 and BlueBoat. 
+                            It has a joystick for controlling the vehicle's thrusters, as well as buttons for 
+                            controlling lights, cameras, and other accessories. The Control Pendant is used for 
+                            manual piloting of the vehicle in addition to the BlueOS software. It a waterproof 
+                            temperature/light-level logger equipped with the power of Bluetooth to deliver accurate 
+                            data straight to your mobile device or Windows computer.
+                        </p>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
             const tableOfContents = document.getElementById('table-of-contents');
             const links = tableOfContents.getElementsByTagName('a');
             const sections = document.querySelectorAll('section, article');
             const dropdownToggle = document.querySelector('.dropdown-toggle');
             const dropdownContent = dropdownToggle.nextElementSibling;
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('full-width');
+            }
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
 
             function setActiveLink() {
                 let currentSection = '';
@@ -250,6 +302,9 @@
                             top: targetElement.offsetTop - 60,
                             behavior: 'smooth'
                         });
+                        if (window.innerWidth <= 768) {
+                            toggleSidebar();
+                        }
                     }
                 });
             }
