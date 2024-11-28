@@ -31,7 +31,6 @@
         }
         .content-about img {
             margin-right: 1rem;
-            max-width: 200px;
             height: auto;
         }
         .component-about {
@@ -170,7 +169,7 @@
         </nav>
     </div>
 
-    <div id="content" style="padding-left: 5rem; padding-right: 5rem;">
+    <div id="content" style="padding-left: 15rem; padding-right: 15rem;">
         <main class="container-fluid mt-5 pt-5">
             <section id="components">
                 <h2 class="text-center mb-4">Components</h2>
@@ -178,7 +177,7 @@
                 <article id="navigator" class="component">
                     <h3>Navigator Flight Controller</h3>
                     <div class="content-about">
-                        <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator Flight Controller" width="200">
+                        <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator Flight Controller" width="250">
                         <p class="component-about" style="color: black;">
                             The Navigator is an ROV and robotics flight controller for the Raspberry Pi 4. 
                             It has an onboard IMU, compass, barometer, and ADC sensors as well as 16 PWM outputs 
@@ -191,7 +190,7 @@
                 <article id="echosounder" class="component">
                     <h3>Ping2 Sonar Altimeter and Echosounder</h3>
                     <div class="content-about">
-                        <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Ping2 Sonar Altimeter and Echosounder" width="200">
+                        <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Ping2 Sonar Altimeter and Echosounder" width="250">
                         <p class="component-about" style="color: black;">
                             The Ping2 is a high-performance ultrasonic distance sensor for use with the BlueROV2. 
                             It has a 500m range with 1cm resolution and an accuracy of +/- 2cm. The Ping2 is used for 
@@ -204,7 +203,7 @@
                 <article id="raspberry" class="component">
                     <h3>Raspberry Pi</h3>
                     <div class="content-about">
-                        <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" width="200">
+                        <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" width="250">
                         <p class="component-about" style="color: black;">
                             The Raspberry Pi is a low-cost, high-performance computer that is used in a wide range of robotics 
                             applications. It is used as the main computer on the BlueROV2 and BlueBoat and runs the BlueOS software. 
@@ -217,7 +216,7 @@
                 <article id="autopilot" class="component">
                     <h3>Autopilot</h3>
                     <div class="content-about">
-                        <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" width="200">
+                        <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" width="250">
                         <p class="component-about" style="color: black;">
                             In the ArduSub control system, the autopilot board (also known as a flight controller) 
                             is the component which the ArduSub firmware is loaded onto. The autopilot processes the pilot input and sensor data, 
@@ -231,7 +230,7 @@
                 <article id="pendant" class="component">
                     <h3>Pendant MX Temperature/Light Data Logger</h3>
                     <div class="content-about">
-                        <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Pendant MX Temperature/Light Data Logger" width="200">
+                        <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Pendant MX Temperature/Light Data Logger" width="250">
                         <p class="component-about" style="color: black;">
                             The Control Pendant is a handheld controller for the BlueROV2 and BlueBoat. 
                             It has a joystick for controlling the vehicle's thrusters, as well as buttons for 
