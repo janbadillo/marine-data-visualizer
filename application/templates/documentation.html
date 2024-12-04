@@ -41,7 +41,7 @@
             top: 100px; /* Increased from 56px */
             left: 0;
             height: calc(100vh - 100px); /* Adjusted to account for new top position */
-            width: 141px;
+            width: 150px;
             background-color: #f8f9fa;
             overflow-y: auto;
             z-index: 1000;
@@ -164,6 +164,8 @@
                         <li><a href="#raspberry">Raspberry Pi</a></li>
                         <li><a href="#autopilot">Autopilot</a></li>
                         <li><a href="#pendant">Pendant</a></li>
+                        <li><a href="#sensordp">Depth/Pressure Sensor</a></li>
+                        <li><a href="#lte">LTE Base HAT</a></li>
                     </ul>
                 </li>
             </ul>
@@ -242,6 +244,32 @@
                         </p>
                     </div>
                 </article>
+
+                <article id="sensordp" class="component">
+                    <h3>Bar30 High-Resolution 300m Depth/Pressure Sensor</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/sensor_d_p.webp') }}" alt="Bar30 High-Resolution 300m Depth/Pressure Sensor" width="250">
+                        <p class="component-about" style="color: black;">
+                            This pressure sensor can measure up to 30 Bar (300m water depth) with a depth resolution of 2mm. 
+                            It is an ideal choice for ROVs, AUVs, remote sensors, and underwater instrumentation.
+                            Compatible with ArduSub on the BlueROV2 and with Arduino and Raspberry Pi devices.
+                        </p>
+                    </div>
+                </article>
+
+                <article id="lte" class="component">
+                    <h3>Sixfab 3G - 4G/LTE Base HAT for Raspberry Pi</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/lte.webp') }}" alt="Sixfab 3G - 4G/LTE Base HAT for Raspberry Pi" width="250">
+                        <p class="component-about" style="color: black;">
+                            As soon as 3G-4G & LTE mini PCIe modules are inserted, this base HAT becomes a bridge between Raspberry Pi and the modem.
+                            This cellular HAT provides simplified data connection for remote IoT projects across the globe.
+                            Offers a high-speed LTE connection with low power consumption in a slim form factor with all necessary software for Raspberry Pi.
+                            Mini PCIe module is required with this product. 
+                        </p>
+                    </div>
+                </article>
+
             </section>
         </main>
     </div>
