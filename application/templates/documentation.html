@@ -41,7 +41,7 @@
             top: 100px; /* Increased from 56px */
             left: 0;
             height: calc(100vh - 100px); /* Adjusted to account for new top position */
-            width: 150px;
+            width: 200px;
             background-color: #f8f9fa;
             overflow-y: auto;
             z-index: 1000;
@@ -156,7 +156,9 @@
             <h2 class="h5"><br></h2>
             <ul>
                 <li>
-                    <a href="#" onclick="window.location.href='/documentation'">Top</a>
+                    <a href="#" onclick="window.location.href='/documentation'">Top</a><br>
+                    <a href="#hosting">Hosting</a><br>
+                    <a href="#datastorage">Data Storage</a><br>
                     <a href="#components" class="dropdown-toggle">Components</a>
                     <ul>
                         <li><a href="#navigator">Navigator</a></li>
@@ -174,6 +176,38 @@
 
     <div id="content" style="padding-left: 15rem; padding-right: 15rem;">
         <main class="container-fluid mt-5 pt-5">
+
+            <section id="hosting">
+                <h2 class="text-center mb-4">Hosting</h2>
+                <article class="component">
+                    <h3>Render</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/render.webp') }}" alt="Render" width="250">
+                        <p class="component-about" style="color: black;">
+                            Render helps software teams ship products fast and at any scale. 
+                            Host everything from hundred-line prototypes to applications with hundreds of services, 
+                            all with a relentless commitment to reliability and uptime.<br><br>
+                            https://render.com/about
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="datastorage">
+                <h2 class="text-center mb-4">Data Storage</h2>
+                <article class="component">
+                    <h3>Google Cloud</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/cloud.webp') }}" alt="Google Cloud" width="250">
+                        <p class="component-about" style="color: black;">
+                            Suite of cloud computing services offered by Google that provides a series of modular cloud services including computing, 
+                            data storage, data analytics, and machine learning, alongside a set of management tools.<br><br>
+                            https://aws.amazon.com/s3/
+                        </p>
+                    </div>
+                </article>
+            </section>
+
             <section id="components">
                 <h2 class="text-center mb-4">Components</h2>
 
