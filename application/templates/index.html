@@ -163,24 +163,28 @@
         } catch (error) {
             console.error("Error:", error);
             alert("Error processing the CSV file.");
-        } finally {
-            hideSpinner();
         }
+        hideSpinner();
     }
 
     document.getElementById("plot-button-upload").addEventListener("click", async () => {
         const graphType = document.getElementById("graphType").value;
         const colorScale = document.getElementById("colorScale").value;
-        showSpinner();
-        /*
-        if (!fileContent) {
-            alert("Please add a CSV file first!");
-            hideSpinner();
-            return;
+
+        try {
+            showSpinner();
+            /*
+            if (!fileContent) {
+                alert("Please add a CSV file first!");
+                hideSpinner();
+                return;
+            }
+            */
+            await processAndPlot(fileContent, graphType, colorScale);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while loading the CSV file: " + error.message);
         }
-        */
-        await processAndPlot(fileContent, graphType, colorScale);
-        hideSpinner();
     });
 
     document.getElementById("plot-button-select").addEventListener("click", async () => {
