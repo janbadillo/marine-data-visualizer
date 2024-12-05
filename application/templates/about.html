@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+            integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+        {% if title %}
+            <title> SeaView {{title}}</title>
+        {% else %}
+            <title> No title given in route! </title>
+        {% endif %}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/">Sea View</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="/graph">Graph</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="/about">About</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="/documentation">Documentation</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </nav>
+        <div class="site-header-logo" style="padding-left: 11rem; padding-right: 11rem;">
+
+            <h1 class="text-center">About</h1>
+
+            <div>
+                <div class="content-about">
+                    <img src="{{ url_for('static', filename='images/divers.webp') }}" alt="Divers" class="img-about" title="Divers">
+                    <p class="about" style="margin-bottom: 0;"> Traditionally, data collection, such as mapping the sea floor (bathymetry) or measuring water properties 
+                        (e.g., salinity, temperature, pH), has been done manually using expensive and sophisticated equipment on vessels. 
+                        This approach is <b class="about">slow, costly, inefficient, and often hinders scientific progress.</b>
+                        It should also be recognized that one of the most common methods is to use divers, which inherently <b class="about">risk</b> 
+                        their <b class="about">lives during expeditions.</b> In addition, some areas are inaccessible by boat, 
+                        either due to legal restrictions or physical limitations, making it <b class="about">difficult to collect the necessary data.</b>
+                    </p>
+                </div>
+                
+                <div class="content-about">
+                    <p class="about" style="margin-bottom: 0;"> <b class="about">Autonomous Underwater or Surface Vehicles (AUVs or ASVs)</b> and robotics 
+                        <b class="about">an efficient, safer alternative</b>  to traditional methods. 
+                        AUVs can <b class="about">autonomously navigate and collect data in areas that are difficult or dangerous for divers to access</b>. 
+                        Equipped with advanced sensors, they gather accurate measurements of seafloor topography and water conditions without the need 
+                        for constant human involvement. This technology <b class="about">reduces the cost and time associated with research expeditions</b>, 
+                        while also minimizing risks to human life. As a result, AUVs streamline data collection, 
+                        making marine research <b class="about">more accessible and sustainable</b>.
+                    </p> 
+                    <img src="{{ url_for('static', filename='images/auv.webp') }}" alt="AUV" class="img-about" title="BlueROV2">   
+                </div>
+                
+            </div>
+
+            <h1 class="text-center" style="margin-top: 0;">Our Team</h1>
+            
+            <div class="grid-container">
+                <div class="item1">
+                    <img src="{{ url_for('static', filename='images/gabriel_archilla.webp') }}" alt="Gabriel Archilla" title="Gabriel Archilla"  width="200" height="200" loading="lazy">
+                    <br><a class="about" href="https://github.com/gaac-rum">Gabriel A. Archilla Cintrón</a>
+                    <p class="about2">
+                        Computer Science and Engineering<br>
+                        University of Puerto Rico - Mayaguez Campus
+                    </p>
+                </div>
+                <div class="item2">
+                    <img src="{{ url_for('static', filename='images/jan_badillo.webp') }}" alt="Jean Badillo" title="Jean Badillo"  width="200" height="200" loading="lazy">
+                    <br><a class="about" href="https://github.com/janbadillo">Jan C. Badillo Rivera</a>
+                    <p class="about2">
+                        Software Engineering<br>
+                        University of Puerto Rico - Mayaguez Campus
+                    </p>
+                </div>
+                <div class="item3">
+                    <img src="{{ url_for('static', filename='images/carlos_acevedo.webp') }}" alt="Carlos Acevedo" title="Carlos Acevedo"  width="200" height="200" loading="lazy">
+                    <br><a class="about" href="https://github.com/AcevedoC17">Carlos A. Acevedo Morales</a>
+                    <p class="about2">
+                        Software Engineering<br>
+                        University of Puerto Rico - Mayaguez Campus
+                    </p>
+                </div>  
+            </div>
+
+            <h1 class="text-center" style="margin-top: 0;">Project Mentor</h1>
+            <div class="content-about">
+                <img src="{{ url_for('static', filename='images/samuel_cardena.webp') }}" alt="Samuel Cardeña" class="img-about" title="Samuel Cardeña" style="padding-bottom: 5rem;">
+                <p class="about">
+                    <a class="about" href="https://www.linkedin.com/in/samuel-carde%C3%B1a-sanchez-448803131/">Professor Samuel Cardeña Sánchez</a>
+                    <br><b>Assistant Professor at the Interamerican University of Puerto Rico, Ponce Campus.</b><br>
+                    Currently, he is in charge of the Marine Robotics Laboratory as well as the Physics and Mathematics courses.<br>
+                    The professor's lines of research focus mainly on water quality studies, underwater inspections and issues related to the effects 
+                    of global warming on the marine environment, using remotely operated robots (ROV), multiple sensors and satellite images.
+                    In addition, there are collaboration agreements with the Port Authority of Ponce and the Punta Cucharas Nature Reserve.<br>
+                </p>
+            </div>
+
+            <div style="font-size: 1.5rem; text-align: justify; padding-bottom: 5rem; padding-left: 3rem; padding-right: 3rem;">
+                <i>"The current challenge is focused on the design and construction of an autonomous marine robot (AUV), a surface vehicle programmed 
+                to sweep aquatic areas of interest, equipped with an echo sounder and GPS capable of measuring localized depth that allows bathymetric 
+                recording to model the relief of the seabed. Among the many advantages of this project are its versatility, functionality and low cost."</i>
+            </div>
+
+            
+        </div>
+
+        <div style="text-align: center; background-color: #007bff; padding: 1rem;">
+            <a href="/" style="margin: 0 15px; color: white;">Home</a>
+            <a href="/graph" style="margin: 0 15px; color: white;">Graph</a>
+            <a href="/about" style="margin: 0 15px; color: white;">About</a>
+            <a href="/documentation" style="margin: 0 15px; color: white;">Documentation</a>
+        </div>
+    </body>
+</html>

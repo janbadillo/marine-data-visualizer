@@ -17,7 +17,15 @@
 * {
   padding: 0px;
   margin: 0;
-  font-family: work_sansregular;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.p-4 {
+  padding: 0rem !important;
+}
+
+.mt-3, .my-3 {
+  margin-top: 0rem !important;
 }
 
 .navbar-text {
@@ -40,4 +48,86 @@
   font-family: lobsterregular;
   font-size: 3rem;
   margin-top: 2rem;
+}
+
+.about {
+  font-size: 1.5rem;
+  font-family: 'Times New Roman', Times, serif;
+  text-align: justify;
+}
+
+.about2 {
+  font-size: 1rem;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.component {
+  font-family: 'Times New Roman', Times, serif; 
+  font-size: 1.5rem;
+}
+
+.component-about {
+  display: flex;
+  font-family: 'Times New Roman', Times, serif; 
+  font-size: 1.3rem; 
+  text-align: justify;
+}
+
+.content-about {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.img-about {
+  width: 25%;
+  height: auto;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  padding: 10px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+uul {
+  list-style-type: none;
+  background-color: #c7c7c7;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  overflow: auto;
+}
+
+lii a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+}
+
+lii a:hover{
+  background-color: #555;
+  color: white;
+}
+
+#dropZone {
+  border: 4px dashed red !important;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s; /* Smooth transition for border color change */
+}
+
+/* Style for when the drag is over the element */
+#dropZone.drag-over {
+  border-color: green !important;
 }

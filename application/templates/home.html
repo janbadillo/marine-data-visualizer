@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="SeaView - Your Ocean Data Visualization Tool">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+    {% if title %}
+        <title>SeaView - {{title}}</title>
+    {% else %}
+        <title>SeaView - Ocean Data Visualization</title>
+    {% endif %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .hero-container {
+            height: 500px;
+            background: #0f1bf6;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hero-content {
+            text-align: center;
+            font-size: 2em;
+            color: rgba(255,255,255, .8);
+            z-index: 1;
+        }
+        .waves {
+            position: absolute;
+            bottom: -135px;
+            height: 527px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .wave {
+            position: absolute;
+            left: -180px;
+            bottom: 0;
+            width: 2402px;
+            height: 427px;
+            background: url(https://static.platzi.com/media/files/waves_c8551f5d-ecf6-4a81-ae1d-f3a0ad55ba10.png) center bottom no-repeat;
+            animation: 5s wave ease-in-out infinite alternate;
+        }
+        .wave.a {
+            background-position: 0 -854px;
+        }
+        .wave.b {
+            background-position: 0 -427px;
+            animation-delay: .6s;
+        }
+        .wave.c {
+            background-position: 0 0;
+            animation-delay: 1.2s;
+        }
+        @keyframes wave {
+            0% {
+                transform: translate(0 , 0);
+            }
+            50% {
+                transform: translate(-80px, 30px);
+            }
+            100% {
+                transform: translate(160px, -60px);
+            }
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffd700;
+            color: #0f1bf6;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #ffea00;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Sea View</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/graph">Graph</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/documentation">Documentation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero-container">
+            <div class="hero-content">
+                <h1 style="color: yellow; font-size: 4rem;">Welcome to SeaView!</h1>
+                <p style="color: white; font-size: 1.5rem;">Your Ocean Data Visualization Tool</p>
+                <a href="/graph" class="cta-button">Start Exploring</a>
+            </div>
+            <div class="waves">
+                <div class="wave circulo a"></div>
+                <div class="wave circulo b"></div>
+                <div class="wave circulo c"></div>
+            </div>
+        </section>
+
+        <section class="container my-5" style="padding-left: 14rem;">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Discover the Ocean's Secrets</h2>
+                    <p>SeaView is a powerful tool designed to help researchers, environmentalists, and ocean enthusiasts visualize and analyze complex ocean data. With our intuitive interface and advanced graphing capabilities, you can uncover patterns, trends, and insights hidden within vast datasets.</p>
+                </div>
+                <div class="col-md-6">
+                    <h2>Key Features</h2>
+                    <div>
+                        * Interactive data visualization<br>
+                        * Support for multiple data formats<br>
+                        * Customizable graphs and charts<br>
+                        * Real-time data processing<br>
+                        * Collaborative tools for team projects
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>About SeaView</h5>
+                    <p>SeaView is a project dedicated to making ocean data more accessible and understandable for everyone.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/about" class="text-white">About Us</a></li>
+                        <li><a href="/documentation" class="text-white">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Connect</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/janbadillo/marine-data-visualizer" class="text-white">GitHub</a></li>
+                    </ul>
+                </div>
+                <!-- <div class="col-md-3">
+                    <h5>Our Team</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/gaac-rum" class="text-white">Gabriel A. Archilla Cintrón</a></li>
+                        <li><a href="https://github.com/janbadillo" class="text-white">Jan C. Badillo Rivera</a></li>
+                        <li><a href="https://github.com/AcevedoC17" class="text-white">Carlos A. Acevedo Morales</a></li>
+                    </ul>
+                </div> -->
+            </div>
+            <hr>
+            <p class="text-center mb-0">&copy; 2024 SeaView. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" 
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>

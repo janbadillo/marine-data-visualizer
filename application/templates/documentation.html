@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+            integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'main.css')}}" type="text/css">
+        {% if title %}
+            <title> SeaView {{title}}</title>
+        {% else %}
+            <title> No title given in route! </title>
+        {% endif %}
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif; 
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .component {
+            margin-top: 2rem;
+            color: black;
+        }
+        .content-about {
+            display: flex;
+            align-items: start;
+            margin-bottom: 2rem;
+        }
+        .content-about img {
+            margin-right: 1rem;
+            height: auto;
+        }
+        .component-about {
+            flex: 1;
+        }
+        #sidebar {
+            position: fixed;
+            top: 100px; /* Increased from 56px */
+            left: 0;
+            height: calc(100vh - 100px); /* Adjusted to account for new top position */
+            width: 200px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar.collapsed {
+            transform: translateX(-250px);
+        }
+        #content {
+            margin-left: 84px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        #content.full-width {
+            margin-left: 0;
+        }
+        #table-of-contents ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #table-of-contents ul ul {
+            padding-left: 1rem;
+            display: none;
+        }
+        #table-of-contents a {
+            text-decoration: none;
+            color: black;
+        }
+        #table-of-contents a:hover {
+            text-decoration: underline;
+        }
+        #table-of-contents .active {
+            font-weight: bold;
+        }
+        .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.255em;
+            vertical-align: 0.255em;
+            content: "";
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+        }
+        .dropdown-toggle.open::after {
+            transform: rotate(180deg);
+        }
+        #sidebar-toggle {
+            position: fixed;
+            top: 114px; /* Increased from 70px */
+            left: 10px;
+            z-index: 1001;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-250px);
+            }
+            #content {
+                margin-left: 0;
+            }
+            #sidebar.collapsed {
+                transform: translateX(0);
+            }
+            #content.full-width {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Sea View</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/graph">Graph</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/documentation">Documentation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <button id="sidebar-toggle" title="Toggle Sidebar">📂</button>
+
+    <div id="sidebar">
+        <nav id="table-of-contents" aria-label="Table of contents">
+            <h2 class="h5"><br></h2>
+            <ul>
+                <li>
+                    <a href="#" onclick="window.location.href='/documentation'">Top</a><br>
+                    <a href="#hosting">Hosting</a><br>
+                    <a href="#datastorage">Data Storage</a><br>
+                    <a href="#components" class="dropdown-toggle">Components</a>
+                    <ul>
+                        <li><a href="#navigator">Navigator</a></li>
+                        <li><a href="#echosounder">Echosounder</a></li>
+                        <li><a href="#raspberry">Raspberry Pi</a></li>
+                        <li><a href="#autopilot">Autopilot</a></li>
+                        <li><a href="#pendant">Pendant</a></li>
+                        <li><a href="#sensordp">Depth/Pressure Sensor</a></li>
+                        <li><a href="#lte">LTE Base HAT</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="content" style="padding-left: 15rem; padding-right: 15rem;">
+        <main class="container-fluid mt-5 pt-5">
+
+            <section id="hosting">
+                <h2 class="text-center mb-4">Hosting</h2>
+                <article class="component">
+                    <h3>Render</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/render.webp') }}" alt="Render" width="250">
+                        <p class="component-about" style="color: black;">
+                            Render helps software teams ship products fast and at any scale. 
+                            Host everything from hundred-line prototypes to applications with hundreds of services, 
+                            all with a relentless commitment to reliability and uptime.<br><br>
+                            https://render.com/about
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="datastorage">
+                <h2 class="text-center mb-4">Data Storage</h2>
+                <article class="component">
+                    <h3>Google Cloud</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/cloud.webp') }}" alt="Google Cloud" width="250">
+                        <p class="component-about" style="color: black;">
+                            Suite of cloud computing services offered by Google that provides a series of modular cloud services including computing, 
+                            data storage, data analytics, and machine learning, alongside a set of management tools.<br><br>
+                            https://cloud.google.com/
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="components">
+                <h2 class="text-center mb-4">Components</h2>
+
+                <article id="navigator" class="component">
+                    <h3>Navigator Flight Controller</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/navigator.webp') }}" alt="Navigator Flight Controller" width="250">
+                        <p class="component-about" style="color: black;">
+                            The Navigator is an ROV and robotics flight controller for the Raspberry Pi 4. 
+                            It has an onboard IMU, compass, barometer, and ADC sensors as well as 16 PWM outputs 
+                            and numerous serial and I2C expansion ports. The Navigator is used on the BlueROV2 and BlueBoat 
+                            in conjunction with the BlueOS software, but can also be used for a wide range of robotics applications!<br><br>
+                            https://github.com/bluerobotics/navigator-lib<br>
+                            https://bluerobotics.com/store/comm-control-power/control/navigator/
+
+                        </p>
+                    </div>
+                </article>
+
+                <article id="echosounder" class="component">
+                    <h3>Ping2 Sonar Altimeter and Echosounder</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/echosounder.webp') }}" alt="Ping2 Sonar Altimeter and Echosounder" width="250">
+                        <p class="component-about" style="color: black;">
+                            The Ping2 is a high-performance ultrasonic distance sensor for use with the BlueROV2. 
+                            It has a 500m range with 1cm resolution and an accuracy of +/- 2cm. The Ping2 is used for 
+                            altitude control, terrain following, and obstacle avoidance. It is also used for bathymetric 
+                            mapping and other acoustic sensing applications.<br><br>
+                            https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/
+                        </p>
+                    </div>
+                </article>
+
+                <article id="raspberry" class="component">
+                    <h3>Raspberry Pi</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/raspberry.webp') }}" alt="Raspberry Pi" width="250">
+                        <p class="component-about" style="color: black;">
+                            The Raspberry Pi is a low-cost, high-performance computer that is used in a wide range of robotics 
+                            applications. It is used as the main computer on the BlueROV2 and BlueBoat and runs the BlueOS software. 
+                            The Raspberry Pi has a powerful ARM processor, HDMI output, USB ports, and GPIO pins for interfacing with 
+                            sensors and other devices.<br><br>
+                            https://www.raspberrypi.com/
+                        </p>
+                    </div>
+                </article>
+
+                <article id="autopilot" class="component">
+                    <h3>Autopilot <b>(Not Used ➡️ Navigator)</b></h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/autopilot.webp') }}" alt="Autopilot" width="250">
+                        <p class="component-about" style="color: black;">
+                            In the ArduSub control system, the autopilot board (also known as a flight controller) 
+                            is the component which the ArduSub firmware is loaded onto. The autopilot processes the pilot input and sensor data, 
+                            and controls the motors, lights, servos, and relays on the vehicle. It has an onboard IMU, compass, barometer, 
+                            and ADC sensors as well as 16 PWM outputs and numerous serial and I2C expansion ports. 
+                            The autopilot is used in conjunction with the BlueOS software to control the ROV and boat in autonomous mode.<br><br>
+                            https://pixhawk.org/products/
+                        </p>
+                    </div>
+                </article>
+
+                <article id="pendant" class="component">
+                    <h3>Pendant MX Temperature/Light Data Logger  <b>(Not Used ➡️ Depth/Pressure Sensor)</b></h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/pendant.webp') }}" alt="Pendant MX Temperature/Light Data Logger" width="250">
+                        <p class="component-about" style="color: black;">
+                            The Control Pendant is a handheld controller for the BlueROV2 and BlueBoat. 
+                            It has a joystick for controlling the vehicle's thrusters, as well as buttons for 
+                            controlling lights, cameras, and other accessories. The Control Pendant is used for 
+                            manual piloting of the vehicle in addition to the BlueOS software. It a waterproof 
+                            temperature/light-level logger equipped with the power of Bluetooth to deliver accurate 
+                            data straight to your mobile device or Windows computer.<br><br>
+                            https://www.onsetcomp.com/products/data-loggers/mx2202
+                        </p>
+                    </div>
+                </article>
+
+                <article id="sensordp" class="component">
+                    <h3>Bar30 High-Resolution 300m Depth/Pressure Sensor</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/sensor_d_p.webp') }}" alt="Bar30 High-Resolution 300m Depth/Pressure Sensor" width="250">
+                        <p class="component-about" style="color: black;">
+                            This pressure sensor can measure up to 30 Bar (300m water depth) with a depth resolution of 2mm. 
+                            It is an ideal choice for ROVs, AUVs, remote sensors, and underwater instrumentation.
+                            Compatible with ArduSub on the BlueROV2 and with Arduino and Raspberry Pi devices.<br><br>
+                            https://bluerobotics.com/store/sensors-cameras/sensors/bar30-sensor-r1/
+                        </p>
+                    </div>
+                </article>
+
+                <article id="lte" class="component">
+                    <h3>Sixfab 3G - 4G/LTE Base HAT for Raspberry Pi</h3>
+                    <div class="content-about">
+                        <img src="{{ url_for('static', filename='images/lte.webp') }}" alt="Sixfab 3G - 4G/LTE Base HAT for Raspberry Pi" width="250">
+                        <p class="component-about" style="color: black;">
+                            As soon as 3G-4G & LTE mini PCIe modules are inserted, this base HAT becomes a bridge between Raspberry Pi and the modem.
+                            This cellular HAT provides simplified data connection for remote IoT projects across the globe.
+                            Offers a high-speed LTE connection with low power consumption in a slim form factor with all necessary software for Raspberry Pi.
+                            Mini PCIe module is required with this product.<br><br>
+                            https://sixfab.com/product/raspberry-pi-base-hat-3g-4g-lte-minipcie-cards/
+                        </p>
+                    </div>
+                </article>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const tableOfContents = document.getElementById('table-of-contents');
+            const links = tableOfContents.getElementsByTagName('a');
+            const sections = document.querySelectorAll('section, article');
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdownContent = dropdownToggle.nextElementSibling;
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('full-width');
+            }
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
+
+            function setActiveLink() {
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= sectionTop - 60) {
+                        currentSection = section.id;
+                    }
+                });
+
+                for (let link of links) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').slice(1) === currentSection) {
+                        link.classList.add('active');
+                        if (link.closest('ul') !== tableOfContents.querySelector('ul')) {
+                            dropdownToggle.classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            window.addEventListener('scroll', setActiveLink);
+
+            for (let link of links) {
+                link.addEventListener('click', function(e) {
+                    if (this.classList.contains('dropdown-toggle')) {
+                        e.preventDefault();
+                        this.classList.toggle('open');
+                        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+                    } else {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').slice(1);
+                        const targetElement = document.getElementById(targetId);
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 60,
+                            behavior: 'smooth'
+                        });
+                        if (window.innerWidth <= 768) {
+                            toggleSidebar();
+                        }
+                    }
+                });
+            }
+
+            // Initially open the dropdown
+            dropdownToggle.classList.add('open');
+            dropdownContent.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+
