@@ -8,14 +8,14 @@
     <div class="card w-100 mx-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
         <div class="d-flex justify-content-center mt-3">
             <label for="graphType" class="form-label me-2">Select Graph Type:</label>
-            <select id="graphType" class="form-select" style="width: 200px;">
-                <option value="3dScatter">Bathymetric/3D-Surface-ScatterPlot</option>
-                <option value="2dScatter">Ocean Properties (2D Scatter Plot)</option>
+            <select id="graphType" class="form-select" style="width: 300px;">
+                <option value="3dScatter">Bathymetric (3D Surface ScatterPlot)</option>
+                <option value="2dScatter">Water Properties (2D Scatter Plot)</option>
             </select>
         </div>
         <div class="d-flex justify-content-center mt-3">
             <label for="colorScale" class="form-label me-2">Select Colorscale:</label>
-            <select id="colorScale" class="form-select" style="width: 200px;">
+            <select id="colorScale" class="form-select" style="width: 300px;">
                 <option value="Viridis">Viridis</option>
                 <option value="Plasma">Plasma</option>
                 <option value="Cividis">Cividis</option>
@@ -127,6 +127,7 @@
             const data = rows.slice(1).filter(row => row.every(value => !isNaN(parseFloat(value))));
             const grouped = {};
 
+            // Same values on 1st and 2nd columns will be grouped and 3rd is the average
             data.forEach(row => {
                 const key = `${row[0]},${row[1]}`;
                 if (!grouped[key]) grouped[key] = [];
@@ -142,7 +143,8 @@
                 z.push(avgZ);
             }
 
-            let traces;
+            // Define Plotly traces based on the selected graph type
+            let traces, layout;
             if (graphType === "3dScatter") {
                 traces = [{
                     x, y, z,
@@ -150,16 +152,36 @@
                     type: "scatter3d",
                     marker: { size: 5, color: z, colorscale: colorScale },
                 }];
+
+                layout = {
+                    title: "3D Scatter Plot",
+                    scene: {
+                        xaxis: { title: headers[0] }, // X-axis label
+                        yaxis: { title: headers[1] }, // Y-axis label
+                        zaxis: { title: headers[2] }, // Z-axis label
+                    },
+                };
             } else if (graphType === "2dScatter") {
                 traces = [{
                     x, y,
                     mode: "markers",
                     type: "scatter",
-                    marker: { size: 8, color: z, colorscale: colorScale },
+                    marker: { size: 8, 
+                        color: z, 
+                        colorscale: colorScale ,
+                        colorbar: {
+                            title: headers[2], // Use the third column header as the title for the colorbar
+                        },},
                 }];
+
+                layout = {
+                    title: "2D Scatter Plot",
+                    xaxis: { title: headers[0] }, // X-axis label
+                    yaxis: { title: headers[1] }, // Y-axis label
+                };
             }
 
-            Plotly.newPlot("plot-container", traces, { title: "Plotly Visualization" });
+            Plotly.newPlot("plot-container", traces, layout, { title: "Data Plot" });
         } catch (error) {
             console.error("Error:", error);
             alert("Error processing the CSV file.");
