@@ -5,60 +5,231 @@
 </div>
 
 <div class="row p-4">
-    <div class="card m-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
-        <div class="card-body">
-            <label for="fileSelector">Select a file:</label>
-            <select id="fileSelector" class="form-select">
-                {% for name in fileNames %}
-                    <option value="{{ name }}">{{ name }}</option>
-                {% endfor %}
+    <div class="card w-100 mx-auto" style="width: auto; height: auto; background-color: rgb(127, 255, 212);">
+        <div class="d-flex justify-content-center mt-3">
+            <label for="graphType" class="form-label me-2">Select Graph Type:</label>
+            <select id="graphType" class="form-select" style="width: 200px;">
+                <option value="3dScatter">Bathymetric/3D-Surface-ScatterPlot</option>
+                <option value="2dScatter">Ocean Properties (2D Scatter Plot)</option>
             </select>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <label for="colorScale" class="form-label me-2">Select Colorscale:</label>
+            <select id="colorScale" class="form-select" style="width: 200px;">
+                <option value="Viridis">Viridis</option>
+                <option value="Plasma">Plasma</option>
+                <option value="Cividis">Cividis</option>
+                <option value="Inferno">Inferno</option>
+                <option value="Magma">Magma</option>
+            </select>
+        </div>
 
-            <button id="plotButton" class="btn btn-primary mt-3">Plot</button>
+        <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Upload CSV</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="select-tab" data-bs-toggle="tab" data-bs-target="#select" type="button" role="tab">Select File</button>
+            </li>
+        </ul>
 
-            <!-- Loading spinner -->
-            <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
-                <span class="sr-only">Loading...</span>
+        <div class="tab-content card-body">
+            <!-- Tab 1: CSV Upload -->
+            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                <form action="/target" class="dropzone mt-4 border-dashed rounded-2 min-h-0" id="csv-dropzone"></form>
+                <div class="d-flex justify-content-center">
+                    <button id="plot-button-upload" class="btn btn-primary mt-3">Plot</button>
+                </div>
             </div>
 
-            <div id="chartContainer" class="mt-4"></div>
+            <!-- Tab 2: File Selection -->
+            <div class="tab-pane fade" id="select" role="tabpanel">
+                <label for="fileSelector">Select a file:</label>
+                <select id="fileSelector" class="form-select">
+                    {% for name in fileNames %}
+                        <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <button id="plot-button-select" class="btn btn-primary mt-3">Plot</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1">
+            <div class="bg-light p-3 rounded shadow">
+                <!-- Loading spinner -->
+                <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;"> </div> 
+
+                <div id="plot-container" style="height: 500px;"></div>
+
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Plotly CDN -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
 <script>
-document.getElementById("plotButton").addEventListener("click", function() {
-    var selectedFile = document.getElementById("fileSelector").value;
+    document.addEventListener("DOMContentLoaded", function () {
+        let existingDropzone = Dropzone.forElement("#csv-dropzone");
     
-    // Show the loading spinner
-    document.getElementById("loadingSpinner").style.display = "block";
+        //properties
+        existingDropzone.options.acceptedFiles = ".csv, text/csv, application/csv, application/vnd.ms-excel, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values";
+        existingDropzone.options.autoProcessQueue = false; // Disable automatic uploads
+        existingDropzone.options.addRemoveLinks = true;
+        existingDropzone.options.dictRemoveFile = "Remove";
 
-    fetch('/plot', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'selected_file': selectedFile
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.graphJSON) {
-            var graphJSON = data.graphJSON;
-            Plotly.newPlot("chartContainer", JSON.parse(graphJSON));
-        } else {
-            console.error("Error generating plot.");
-        }
-    })
-    .catch(error => console.error("Error:", error))
-    .finally(() => {
-        // Hide the loading spinner after plot is loaded
-        document.getElementById("loadingSpinner").style.display = "none";
+        // for emulating loading bar when file is dropped in the dropzone
+        existingDropzone.on("addedfile", function (file) {
+            console.log(`CSV file added: ${file.name}`);
+            
+            let progress = 0;
+            let interval = setInterval(() => {
+                progress += 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    existingDropzone.emit("complete", file);
+                }
+                existingDropzone.emit("uploadprogress", file, progress);
+            }, 50);
+
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                fileContent = event.target.result; // Store CSV content
+                console.log(`File content loaded:\n${fileContent}`);
+            };
+            reader.readAsText(file); // Read file as text for CSV processing
+        });
+    
+        existingDropzone.on("removedfile", function (file) {
+            console.log(`File removed: ${file.name}`);
+        });
+    
+        existingDropzone.on("error", function (file, message) {
+            console.error(`Error with file: ${file.name}. Message: ${message}`);
+        });
     });
-});
+
+    // Function to process CSV and generate the 3D scatter plot
+    async function processAndPlot(fileContent, graphType, colorScale) {
+        try {
+            const rows = fileContent.trim().split("\n").map(row => row.split(","));
+            if (rows.length < 2) {
+                alert("CSV file must have at least two rows!");
+                return;
+            }
+
+            const headers = rows[0];
+            const data = rows.slice(1).filter(row => row.every(value => !isNaN(parseFloat(value))));
+            const grouped = {};
+
+            data.forEach(row => {
+                const key = `${row[0]},${row[1]}`;
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(parseFloat(row[2]));
+            });
+
+            const x = [], y = [], z = [];
+            for (const key in grouped) {
+                const [xi, yi] = key.split(",");
+                const avgZ = grouped[key].reduce((a, b) => a + b, 0) / grouped[key].length;
+                x.push(parseFloat(xi));
+                y.push(parseFloat(yi));
+                z.push(avgZ);
+            }
+
+            let traces;
+            if (graphType === "3dScatter") {
+                traces = [{
+                    x, y, z,
+                    mode: "markers",
+                    type: "scatter3d",
+                    marker: { size: 5, color: z, colorscale: colorScale },
+                }];
+            } else if (graphType === "2dScatter") {
+                traces = [{
+                    x, y,
+                    mode: "markers",
+                    type: "scatter",
+                    marker: { size: 8, color: z, colorscale: colorScale },
+                }];
+            }
+
+            Plotly.newPlot("plot-container", traces, { title: "Plotly Visualization" });
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error processing the CSV file.");
+        }
+        hideSpinner();
+    }
+
+    document.getElementById("plot-button-upload").addEventListener("click", async () => {
+        const graphType = document.getElementById("graphType").value;
+        const colorScale = document.getElementById("colorScale").value;
+
+        try {
+            showSpinner();
+            /*
+            if (!fileContent) {
+                alert("Please add a CSV file first!");
+                hideSpinner();
+                return;
+            }
+            */
+            await processAndPlot(fileContent, graphType, colorScale);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while loading the CSV file: " + error.message);
+        }
+    });
+
+    document.getElementById("plot-button-select").addEventListener("click", async () => {
+        //const selectedFile = document.getElementById("fileSelector").value;
+        const graphType = document.getElementById("graphType").value;
+        const colorScale = document.getElementById("colorScale").value;
+        
+        var selectedFile = document.getElementById("fileSelector").value;
+
+        try {
+            showSpinner();
+            // POST request to Flask backend to get the CSV content
+            const response = await fetch("/plot", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    'selected_file': selectedFile
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to fetch CSV file.");
+            }
+    
+            const data = await response.json();
+    
+            if (data.error) {
+                throw new Error(data.error);
+            }
+    
+            const csvContent = data.csv_content;
+    
+            await processAndPlot(csvContent, graphType, colorScale);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while fetching the CSV file: " + error.message);
+        }
+    });
+
+    function showSpinner() {
+        document.getElementById("loadingSpinner").style.display = "block";
+    }
+    
+    function hideSpinner() {
+        document.getElementById("loadingSpinner").style.display = "none";
+    }
 </script>
 {% endblock %}
