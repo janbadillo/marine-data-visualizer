@@ -60,7 +60,11 @@
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
             <div class="bg-light p-3 rounded shadow">
+                <!-- Loading spinner -->
+                <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;"> </div> 
+
                 <div id="plot-container" style="height: 500px;"></div>
+
             </div>
         </div>
     </div>
@@ -159,101 +163,69 @@
         } catch (error) {
             console.error("Error:", error);
             alert("Error processing the CSV file.");
+        } finally {
+            hideSpinner();
         }
     }
 
     document.getElementById("plot-button-upload").addEventListener("click", async () => {
         const graphType = document.getElementById("graphType").value;
         const colorScale = document.getElementById("colorScale").value;
-
+        showSpinner();
+        /*
         if (!fileContent) {
             alert("Please add a CSV file first!");
+            hideSpinner();
             return;
         }
+        */
         await processAndPlot(fileContent, graphType, colorScale);
+        hideSpinner();
     });
 
     document.getElementById("plot-button-select").addEventListener("click", async () => {
+        //const selectedFile = document.getElementById("fileSelector").value;
         const graphType = document.getElementById("graphType").value;
         const colorScale = document.getElementById("colorScale").value;
+        
+        var selectedFile = document.getElementById("fileSelector").value;
 
-        // Simulate fetching the file content
-        const fileContent = "your file content from selected file logic here";
-        await processAndPlot(fileContent, graphType, colorScale);
+        try {
+            showSpinner();
+            // POST request to Flask backend to get the CSV content
+            const response = await fetch("/plot", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    'selected_file': selectedFile
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to fetch CSV file.");
+            }
+    
+            const data = await response.json();
+    
+            if (data.error) {
+                throw new Error(data.error);
+            }
+    
+            const csvContent = data.csv_content;
+    
+            await processAndPlot(csvContent, graphType, colorScale);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while fetching the CSV file: " + error.message);
+        }
     });
-</script>
-<!--
-<script src="../node_modules/dropzone/dist/min/dropzone.min.js"></script>
-<script src="../assets/js/vendors/dropzone.js"></script>
 
-<script>
-// Drag-and-drop functionality
-const dropZone = document.getElementById("dropZone");
-
-dropZone.addEventListener("dragover", (event) => {
-    event.preventDefault(); // Prevent default behavior to allow drop
-    event.stopPropagation();
-    dropZone.classList.add("drag-over"); // Add class to change border color
-    //dropZone.style.borderColor = "green";
-    console.log("Cursor is now over the drop-zone!");
-});
-
-dropZone.addEventListener("dragleave", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    dropZone.classList.remove("drag-over"); // Remove class to reset color
-    console.log("Cursor is now away from drop-zone!");
-});
-
-dropZone.addEventListener("drop", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    dropZone.classList.remove("drag-over"); // Remove class after drop
-
-    const file = event.dataTransfer.files[0];
-    if (file && file.name.endsWith(".csv")) {
-        console.log("CSV file dropped:", file.name);
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const data = e.target.result;
-            console.log("CSV file content loaded.");
-            processCSVData(data, "chartContainerUpload");
-        };
-        reader.onerror = function () {
-            console.error("Error reading file.");
-        };
-        reader.readAsText(file);
-    } else {
-        console.error("Only CSV files are supported.");
-        alert("Please drop a valid .csv file.");
+    function showSpinner() {
+        document.getElementById("loadingSpinner").style.display = "block";
     }
-});
-
-// Function to process CSV data and plot
-function processCSVData(csvData, containerId) {
-    console.log("Processing CSV data for plotting...");
-
-    // Parse the CSV data
-    const rows = csvData.trim().split("\n").map(row => row.split(","));
-    const headers = rows[0];
-    const data = rows.slice(1).map(row => row.map(Number)); // Converting data rows to numbers
-
-    if (data.length === 0 || data[0].length < 2) {
-        console.error("Insufficient data to plot.");
-        alert("The CSV file must have at least two columns of numeric data.");
-        return;
+    
+    function hideSpinner() {
+        document.getElementById("loadingSpinner").style.display = "none";
     }
-
-    // Assuming columns for x and y values
-    const trace = {
-        x: data.map(row => row[0]), // x values from first column
-        y: data.map(row => row[1]), // y values from second column
-        mode: "lines",
-    };
-    Plotly.newPlot(containerId, [trace]);
-    console.log("Plot created successfully in", containerId);
-}
 </script>
--->
 {% endblock %}
