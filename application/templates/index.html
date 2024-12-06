@@ -26,17 +26,21 @@
 
         <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Upload CSV</button>
+                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Local File</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="select-tab" data-bs-toggle="tab" data-bs-target="#select" type="button" role="tab">Select File</button>
+                <button class="nav-link" id="select-tab" data-bs-toggle="tab" data-bs-target="#select" type="button" role="tab">Cloud File</button>
             </li>
         </ul>
 
         <div class="tab-content card-body">
             <!-- Tab 1: CSV Upload -->
             <div class="tab-pane fade show active" id="upload" role="tabpanel">
-                <form action="/target" class="dropzone mt-4 border-dashed rounded-2 min-h-0" id="csv-dropzone"></form>
+                <form action="/target" class="dropzone mt-4 border-dashed rounded-2 min-h-0" id="csv-dropzone">
+                    <div class="dz-message">
+                        <p>Drag and drop your CSV file here, or click to upload</p>
+                    </div>
+                </form>
                 <div class="d-flex justify-content-center">
                     <button id="plot-button-upload" class="btn btn-primary mt-3">Plot</button>
                 </div>
@@ -50,7 +54,9 @@
                         <option value="{{ name }}">{{ name }}</option>
                     {% endfor %}
                 </select>
-                <button id="plot-button-select" class="btn btn-primary mt-3">Plot</button>
+                <div class="d-flex justify-content-center">
+                    <button id="plot-button-select" class="btn btn-primary mt-3">Plot</button>
+                </div>
             </div>
         </div>
     </div>
@@ -81,6 +87,7 @@
         existingDropzone.options.autoProcessQueue = false; // Disable automatic uploads
         existingDropzone.options.addRemoveLinks = true;
         existingDropzone.options.dictRemoveFile = "Remove";
+        //existingDropzone.options.dictDefaultMessage = "Drag and drop your CSV file here, or click to upload";
 
         // for emulating loading bar when file is dropped in the dropzone
         existingDropzone.on("addedfile", function (file) {
